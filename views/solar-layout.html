@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html class="no-js" lang="{{=T.accepted_language or 'en'}}" ng-app="Administracion">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{=response.title or request.application}}</title>
+    <meta name="application-name" content="{{=request.application}}">
+    <meta name="google-site-verification" content="">
+
+    <!-- include stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <!-- <link rel="stylesheet" href="{{=URL('static','css/bootstrap.min.css')}}" /> -->
+    <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap4.css')}}" />
+    <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+    <!-- All JavaScript at the bottom, except for Modernizr which enables
+            HTML5 elements & feature detects -->
+    <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+    <!-- Favicons -->
+    {{include 'web2py_ajax.html'}}
+    <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+    {{block head}}{{end}}
+
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','bootstrap/css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','font-awesome/css/font-awesome.min.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','css/local.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','css/custom.css')}}" />
+
+    <script type="text/javascript" src="{{=URL('static','js/jquery-1.10.2.min.js')}}"></script>
+    <script type="text/javascript" src="{{=URL('static','bootstrap/js/bootstrap.min.js')}}"></script>
+
+    <!-- you need to include the shieldui css and js assets in order for the charts to work -->
+    <link rel="stylesheet" type="text/css"
+        href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
+    <link id="gridcss" rel="stylesheet" type="text/css"
+        href="http://www.shieldui.com/shared/components/latest/css/dark-bootstrap/all.min.css" />
+
+    <script type="text/javascript"
+        src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+    <script type="text/javascript" src="http://www.prepbootstrap.com/Content/js/gridData.js"></script>
+</head>
+
+<body ng-controller="ControladorPrincipal" ng-init="initialization()">
+    <div id="wrapper">
+
+        <!-- #region NAV -->
+
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="index.html">SOLAR PLANTS DASHBOARD</a>
+            </div>
+
+            <div class="collapse navbar-collapse navbar-ex1-collapse">
+                <ul id="active" class="nav navbar-nav side-nav">
+                    <li><a href="{{=URL('default', 'index')}}"><i class="fa fa-globe"></i> Dashboard</a></li>
+                    <li class="accordion" ng-show="authUser"><a href="#"><i class="fa fa-chevron-right"></i> Performance
+                            analysis</a></li>
+                    <div class="panel">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{=URL('plantSummary', 'index')}}"><i class="fa fa-bar-chart"></i> Plant
+                                    Summary</a></li>
+                            <li><a href="{{=URL('execSummary', 'index')}}"><i class="fa fa-table"></i> Basic KPIs</a></li>
+                            <li><a href="{{=URL('inverterLosses', 'index')}}"><i class="fa fa-table"></i> Inverter
+                                    Losses</a></li>
+                            <li><a href="{{=URL('lossBreakdown', 'index')}}"><i class="fa fa-pie-chart"></i> Loss
+                                    Breakdown</a></li>
+                            <li><a href="{{=URL('shutAndStart', 'index')}}"><i class="fa fa-bar-chart"></i> Shutdown and
+                                    Startup</a></li>
+                            <li><a href="{{=URL('performStnInv', 'index')}}"><i class="fa fa-table"></i> Stn Inv
+                                    Performance</a></li>
+                        </ul>
+                    </div>
+                    <li class="accordion" ng-show="authUser"><a href="#"><i class="fa fa-chevron-right"></i> Alarm
+                            management</a></li>
+                    <div class="panel">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{=URL('alarms', 'index', args=['Alarms list'])}}"><i class="fa fa-list"></i>
+                                    Alarms list</a></li><br>
+                            <li><a href="{{=URL('default', 'vacia', args=['Pareto'])}}"><i class="fa fa-line-chart"></i>
+                                    Pareto</a></li>
+                        </ul>
+                    </div>
+                    <li ng-show="authUser"><a href="{{=URL('default', 'heatmap')}}"><i class="fa fa-table"></i> String
+                            performance analysis</a></li>
+                    <li class="accordion" ng-show="authUser"><a href="#"><i class="fa fa-chevron-right"></i> Tracker
+                            analysis</a></li>
+                    <div class="panel">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{=URL('timeSeriesTracker', 'index')}}"><i class="fa fa-line-chart"></i> Angle
+                                    Distribution</a></li><br>
+                            <li><a href="{{=URL('trackerHeatMap', 'index')}}"><i class="fa fa-table"></i> Heatmap
+                                    1..3</a></li><br>
+                            <li><a href="{{=URL('execSummary', 'index')}}"><i class="fa fa-table"></i> Table</a></li>
+                        </ul>
+                    </div>
+                    <li ng-show="authUser"><a href="{{=URL('realTimer', 'index')}}"><i class="fa fa-clock-o"></i> Real
+                            time values</a></li>
+                    <li class="accordion" ng-show="authUser"><a href="#"><i class="fa fa-chevron-right"></i> Reports</a>
+                    </li>
+                    <div class="panel">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{=URL('default', 'vacia', args=['Update BD'])}}"><i
+                                        class="fa fa-database"></i> Update BD...</a></li>
+                        </ul>
+                    </div>
+                    <li class="accordion" ng-show="authUser"><a href="#"><i class="fa fa-chevron-right"></i> Field
+                            analysis</a></li>
+                    <div class="panel">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{=URL('fielData', 'index')}}"><i class="fa fa-area-chart"></i> Transformer
+                                    analysis</a></li><br>
+                            <li><a href="{{=URL('default', 'vacia', args=['IV Tracing analysis'])}}"><i
+                                        class="fa fa-bar-chart"></i> IV Tracing
+                                    analysis</a></li>
+                        </ul>
+                    </div>
+                    <li class="accordion" ng-show="authUser"><a href="#"><i class="fa fa-chevron-right"></i> Advanced
+                            analysis</a></li>
+                    <div class="panel">
+                        <ul class="nav navbar-nav">
+                            <li><a href="{{=URL('timeSeries', 'index')}}"><i class="fa fa-line-chart"></i> Time
+                                    series</a></li><br>
+                            <li><a href="{{=URL('default', 'correlation')}}"><i class="fa fa-area-chart"></i>
+                                    Correlation analysis</a></li><br>
+                            <li><a href="{{=URL('default', 'category')}}"><i class="fa fa-bar-chart-o"></i> Category
+                                    analysis</a></li><br>
+                            <li><a href="{{=URL('default', 'histogram')}}"><i class="fa fa-bar-chart-o"></i>
+                                    Histogram</a></li><br>
+                        </ul>
+                    </div>
+                    <li ng-show="authUser"><a href="{{=URL('farmsControl', 'index', args=['Farms control'])}}"><i
+                                class="fa fa-table"></i> Farms control</a></li>
+                    <li style="text-decorator:none;"><a href="#"><i></i> </a></li>
+                    <li style="text-decorator:none;"><a href="#"><i></i> </a></li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right navbar-user">
+                    <li class="dropdown messages-dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-envelope"></i>
+                            Messages <span class="badge">2</span> <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li class="dropdown-header">2 New Messages</li>
+                            <li class="message-preview">
+                                <a href="#">
+                                    <span class="avatar"><i class="fa fa-bell"></i></span>
+                                    <span class="message">Security alert</span>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li class="message-preview">
+                                <a href="#">
+                                    <span class="avatar"><i class="fa fa-bell"></i></span>
+                                    <span class="message">Security alert</span>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li><a href="#">Go to Inbox <span class="badge">2</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown user-dropdown" ng-show="authUser">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i>
+                            <span id="userName"></span><b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+                            <li><a href="#"><i class="fa fa-gear"></i> Settings</a></li>
+                            <li class="divider"></li>
+                            <li><a href="#" ng-click="logout()"><i class="fa fa-power-off"></i> Log Out</a></li>
+                        </ul>
+                    </li>
+                    <li><a id="loginBtn" href="#" ng-show="!authUser"><i class="fa fa-power-on"></i> Log In</a></li>
+                    <li class="divider-vertical"></li>
+                    <li>
+                        <form class="navbar-search">
+                            <input class="select-css" type="text" placeholder="Search" style="margin-top: 5px;">
+                        </form>
+                    </li>
+                </ul>
+            </div>
+
+        </nav>
+
+        <!-- #endregion NAV -->
+
+        <!-- #region PAGE CONTENT -->
+
+        {{include}}
+        {{=response.toolbar() if response.show_toolbar else ''}}
+
+        <!-- #endregion PAGE CONTENT -->
+
+    </div>
+
+    <!-- Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div>
+                <div id="firebaseui-auth-container" style="width: 100%; clear: both;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- #region JAVASCRIPT -->
+
+    <script src="{{=URL('static','js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{=URL('static','js/web2py-bootstrap4.js')}}"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- Angular -->
+    <script src="{{=URL('static','js/angular.min.js')}}"></script>
+    <script src="{{=URL('static','js/angularController.js')}}"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/ui/4.0.0/firebase-ui-auth__es_419.js"></script> -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
+    <script src="{{=URL('static','js/firebaseCommunication.js')}}"></script>
+
+    <!-- Analytics -->
+    {{block page_js}}{{end page_js}}
+
+    {{if response.google_analytics_id:}}
+    <!-- Analytics -->
+    <script src="{{=URL('static','js/analytics.min.js')}}"></script>
+    <script type="text/javascript">
+        analytics.initialize({
+            'Google Analytics': { trackingId: '{{=response.google_analytics_id}}' }
+        });
+    </script>
+    {{pass}}
+
+    <script type="text/javascript">
+        var acc = document.getElementsByClassName("accordion");
+        for (let i = 0; i < acc.length; i++) {
+            acc[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                if (this.getElementsByTagName("i")[0].classList.contains("fa-chevron-right")) {
+                    this.getElementsByTagName("i")[0].classList.remove("fa-chevron-right");
+                    this.getElementsByTagName("i")[0].classList.add("fa-chevron-down");
+                } else {
+                    this.getElementsByTagName("i")[0].classList.remove("fa-chevron-down");
+                    this.getElementsByTagName("i")[0].classList.add("fa-chevron-right");
+                }
+                let panel = this.nextElementSibling;
+                if (panel.style.display === "block") {
+                    panel.style.display = "none";
+                } else {
+                    panel.style.display = "block";
+                }
+            });
+        }
+
+        var modal = document.getElementById("myModal");
+        var btn = document.getElementById("loginBtn");
+        var span = document.getElementsByClassName("close")[0];
+        btn.onclick = function () {
+            modal.style.display = "block";
+        }
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+        window.onclick = function (event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    </script>
+
+    <!-- #endregion JAVASCRIPT -->
+</body>
+
+</html>

@@ -1,0 +1,148 @@
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h4><small>Prueba: {{=T(message)}}</small></h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="block">
+                <div class="title">
+                    <h5 class="panel-title"><i class="fa fa-area-chart"></i> Duval Triangle 1 for Transformer
+                        <a id="myBtn" href="#" class="pull-right" data-toggle="modal" data-target="#exampleModalCenter" style="display: none;">Settings <i class="fa fa-cog"
+                                aria-hidden="true"></i></a>
+                    </h5>
+                </div>
+                <div class="panel-body">
+                    <div style="overflow-x: auto;">
+                        <table id="alarmTable" class="display" width="100%"></table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" style="text-align: left;">
+                        <div class="col-sx-12 col-sm-12">
+                            <h3 id="alarm_title"></h3>
+                        </div>
+                        <div class="col-sx-12 col-sm-3">Cause:</div>
+                        <div class="col-sx-12 col-sm-9">
+                            <select name="" id="alarm_cause" value="now Date()"
+                                style="background: #282828; margin-bottom: 30px;">
+                                <option value="Unknow" selected>Unknow</option>
+                                <option value="Cabling">Cabling</option>
+                                <option value="Diodes">Diodes</option>
+                                <option value="Fuse">Fuse</option>
+                            </select>
+                        </div>
+                        <div class="col-sx-12 col-sm-3">Troubleshooting:</div>
+                        <div class="col-sx-12 col-sm-9"><input id="alarm_solution_date" type="date"
+                                style="background: #282828; margin-bottom: 30px;"></div>
+                        <div class="col-sx-12 col-sm-3">Summary report:</div>
+                        <div class="col-sx-12 col-sm-9"><textarea name="" id="alarm_summary" cols="35" rows="4"
+                                style="background: #282828; margin-bottom: 30px;"></textarea></div>
+                    </div>
+                    </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    var dataSet = [
+        ["Activation", "Priority", "System", "Plant", "Ticket", "Date", "Status"],
+        ["25/04/2011", "higth", "Inverter 1", " Ontario - Canada", "5421", "", "Active"],
+        ["25/07/2011", "higth", "Inverter 2", " Ontario - Canada", "8422", "25/07/2011", "Resolved"],
+        ["12/01/2009", "higth", "Inverter 3", " Dubai", "1562", "12/01/2009", "Resolved"],
+        ["29/03/2012", "higth", "Inverter 4", " Ontario - Canada", "6224", "29/03/2012", "Resolved"],
+        ["28/11/2008", "higth", "Inverter 5", " Ontario - Canada", "5407", "", "Active"],
+        ["02/12/2012", "higth", "Inverter 1", " Moroco", "4804", "", "Active"],
+        ["06/08/2012", "higth", "Inverter 2", " Dubai", "9608", "", "Active"],
+        ["14/10/2010", "low", "Inverter 3", " Ontario - Canada", "6200", "", "Active"],
+        ["15/09/2009", "low", "Inverter 4", " Dubai", "2360", "15/09/2009", "Resolved"],
+        ["13/12/2008", "low", "Inverter 5", " Ontario - Canada", "1667", "13/12/2008", "Resolved"],
+        ["19/12/2008", "low", "Inverter 1", " Dubai", "3814", "", "Active"],
+        ["03/03/2013", "low", "Inverter 2", " Ontario - Canada", "9497", "", "Active"],
+        ["16/10/2008", "low", "Inverter 3", " Dubai", "6741", "", "Active"],
+        ["18/12/2012", "low", "Inverter 4", " Dubai", "3597", "18/12/2012", "Resolved"],
+        ["17/03/2010", "low", "Inverter 5", " Dubai", "1965", "17/03/2010", "Resolved"],
+        ["27/11/2012", "low", "Inverter 1", " Dubai", "1581", "", "Active"],
+        ["09/06/2010", "low", "Inverter 2", " Moroco", "3059", "09/06/2010", "Resolved"],
+        ["10/04/2009", "low", "Inverter 3", " Moroco", "1721", "10/04/2009", "Resolved"],
+        ["13/10/2012", "low", "Inverter 4", " Dubai", "2558", "13/10/2012", "Resolved"],
+        ["26/09/2012", "low", "Inverter 5", " Ontario - Canada", "2290", "", "Active"],
+        ["03/09/2011", "low", "Inverter 1", " Moroco", "1937", "", "Active"],
+        ["25/06/2009", "low", "Inverter 2", " Moroco", "6154", "", "Active"],
+        ["12/12/2011", "low", "Inverter 3", " Moroco", "8330", "", "Active"],
+        ["20/09/2010", "low", "Inverter 4", " Hanoi - Vietnam", "3023", "20/09/2010", "Resolved"],
+        ["09/10/2009", "low", "Inverter 5", " Dubai", "5797", "09/10/2009", "Resolved"],
+        ["22/12/2010", "low", "Inverter 1", " Ontario - Canada", "8822", "", "Active"],
+        ["14/11/2010", "low", "Inverter 2", " Hanoi - Vietnam", "9239", "", "Active"],
+        ["07/06/2011", "low", "Inverter 3", " Dubai", "1314", "", "Active"],
+        ["11/03/2010", "low", "Inverter 4", " Dubai", "2947", "11/03/2010", "Resolved"],
+        ["14/08/2011", "low", "Inverter 5", " Ontario - Canada", "8899", "14/08/2011", "Resolved"],
+        ["02/06/2011", "low", "Inverter 1", " Hanoi - Vietnam", "2769", "", "Active"],
+        ["22/10/2009", "low", "Inverter 2", " Dubai", "6832", "", "Active"],
+        ["07/05/2011", "low", "Inverter 3", " Dubai", "3606", "", "Active"],
+        ["26/10/2008", "low", "Inverter 4", " Dubai", "2860", "", "Active"],
+        ["09/03/2011", "low", "Inverter 5", " Ontario - Canada", "8240", "09/03/2011", "Resolved"],
+        ["09/12/2009", "low", "Inverter 1", " Dubai", "5384", "09/12/2009", "Resolved"]
+    ];
+
+    $(document).ready(function () {
+        var table = $('#alarmTable').DataTable({
+            data: dataSet,
+            columns: [
+                { title: "Activation" },
+                { title: "Priority" },
+                { title: "System" },
+                { title: "Plants" },
+                { title: "Ticket" },
+                { title: "Date" },
+                { title: "Status" }
+            ]
+        });
+
+        $('#alarmTable tbody').on('click', 'tr', function () {
+            var data = table.row(this).data();
+            modal.style.display = "block";
+            document.getElementById("alarm_title").innerHTML = data[0] + " - " + data[1] + " - " + data[2];
+        });
+    });
+
+</script>

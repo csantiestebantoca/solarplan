@@ -1,0 +1,217 @@
+{{extend 'layout.html'}}
+
+<!--
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+      integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+      crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+        integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+        crossorigin=""></script>
+<script src=" https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<script src='https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js'></script>
+-->
+
+<div class="row">
+
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="title">
+                <h5 ng-click="selectPlan('Hanoi')"><i class="fa fa-map-o"></i> Map</h5>
+            </div>
+            <div class="">
+                <div id="mapid" class="figure"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-xs-12 col-sm-8">
+        <div class="block">
+            <div class="title">
+                <h5><i class="fa fa-bell"></i> Arlarms</h5>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="example" class="display" width="100%"></table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="block">
+            <div class="title">
+                <h5><i class="fa fa-magnet"></i> Overview</h5>
+            </div>
+            <div>
+                <ul class="server-stats">
+                    <li>
+                        <div class="key pull-right">%</div>
+                        <div class="stat">
+                            <div class="info">PR - 50.62%</div>
+                            <div class="progress progress-small">
+                                <div style="width: 50.62%;" class="progress-bar progress-bar-danger"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">%</div>
+                        <div class="stat">
+                            <div class="info">Aviability - 100%</div>
+                            <div class="progress progress-small">
+                                <div style="width: 100%;" class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">%</div>
+                        <div class="stat">
+                            <div class="info">Energy performance - 98.78%</div>
+                            <div class="progress progress-small">
+                                <div style="width: 98.78%;" class="progress-bar progress-bar-inverse"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mapa en Leaflet -->
+<script>
+    console.log('init map');
+    var mymap = L.map('mapid').setView([30, 0], 1.5);
+
+    var t = L.terminator();
+    t.addTo(mymap);
+    setInterval(function () {
+        updateTerminator(t)
+    }, 500);
+
+    function updateTerminator(t) {
+        t.setTime();
+    }
+
+    L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+        maxZoom: 18,
+        minZoom: 2,
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        id: 'mapbox/streets-v11',
+        tileSize: 512,
+        zoomOffset: -1
+    }).addTo(mymap);
+    console.log('creando icons');
+
+    var greenIcon = L.icon({
+        iconUrl: 'leaf-green.png',
+        shadowUrl: 'leaf-shadow.png',
+
+        iconSize: [38, 95], // size of the icon
+        shadowSize: [50, 64], // size of the shadow
+        iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+
+    let estiloPopup = {
+        'color': 'black !important',
+        'backgrount-color': 'blue !important'
+    };
+
+    let iconoBase = L.Icon.extend({
+        options: {
+            iconSize: [20 + 2 * (mymap.getZoom()), 20 + 2 * (mymap.getZoom())]
+        }
+    });
+
+    let smallsolarIcon = new iconoBase({iconUrl: "{{=URL('static', 'images/solarpanel1.png')}}"});
+    let smallwindIcon = new iconoBase({iconUrl: "{{=URL('static', 'images/windpower1.png')}}"});
+    console.log('add marks');
+
+    var m1 = L.marker([31.621748, -7.991440], {icon: smallwindIcon}).bindPopup("<p><b>Morocco</b></p><p>Wind Farm</p>", estiloPopup).addTo(mymap);
+    var m2 = L.marker([21.042885, 105.831041], {icon: smallsolarIcon}).bindPopup("<p><b>Hanoi, Vietnam</b></p><p>Solar Farm</p>", estiloPopup).addTo(mymap);
+    var m3 = L.marker([43.087388, -79.068888], {icon: smallsolarIcon}).bindPopup("<p><b>Ontario, Canada</b></p><p>Solar Farm</p>", estiloPopup).addTo(mymap);
+    var m4 = L.marker([24.963087, 54.996985], {icon: smallwindIcon}).bindPopup("<p><b>Dubai</b></p><p>Wind Farm</p>", estiloPopup).addTo(mymap);
+
+    console.log('visual map');
+    mymap.on('zoomend', function () {
+        let iconoBase = L.Icon.extend({
+            options: {
+                iconSize: [20 + 2 * (mymap.getZoom()), 20 + 2 * (mymap.getZoom())]
+            }
+        });
+        let solarIcon = new iconoBase({iconUrl: "{{=URL('static', 'images/solarpanel1.png')}}"});
+        let windIcon = new iconoBase({iconUrl: "{{=URL('static', 'images/windpower1.png')}}"});
+
+        m1.setIcon(windIcon);
+        m2.setIcon(solarIcon);
+        m3.setIcon(solarIcon);
+        m4.setIcon(windIcon);
+
+    });
+</script>
+
+<!-- Tabla de alarmas -->
+<script>
+    var dataSet = [
+        ["Activation", "Priority", "System", "Plant", "Ticket", "Date", "Status"],
+        ["25/04/2011", "higth", "Inverter 1", " Ontario - Canada", "5421", "", "Active"],
+        ["25/07/2011", "higth", "Inverter 2", " Ontario - Canada", "8422", "25/07/2011", "Resolved"],
+        ["12/01/2009", "higth", "Inverter 3", " Dubai", "1562", "12/01/2009", "Resolved"],
+        ["29/03/2012", "higth", "Inverter 4", " Ontario - Canada", "6224", "29/03/2012", "Resolved"],
+        ["28/11/2008", "higth", "Inverter 5", " Ontario - Canada", "5407", "", "Active"],
+        ["02/12/2012", "higth", "Inverter 1", " Moroco", "4804", "", "Active"],
+        ["06/08/2012", "higth", "Inverter 2", " Dubai", "9608", "", "Active"],
+        ["14/10/2010", "low", "Inverter 3", " Ontario - Canada", "6200", "", "Active"],
+        ["15/09/2009", "low", "Inverter 4", " Dubai", "2360", "15/09/2009", "Resolved"],
+        ["13/12/2008", "low", "Inverter 5", " Ontario - Canada", "1667", "13/12/2008", "Resolved"],
+        ["19/12/2008", "low", "Inverter 1", " Dubai", "3814", "", "Active"],
+        ["03/03/2013", "low", "Inverter 2", " Ontario - Canada", "9497", "", "Active"],
+        ["16/10/2008", "low", "Inverter 3", " Dubai", "6741", "", "Active"],
+        ["18/12/2012", "low", "Inverter 4", " Dubai", "3597", "18/12/2012", "Resolved"],
+        ["17/03/2010", "low", "Inverter 5", " Dubai", "1965", "17/03/2010", "Resolved"],
+        ["27/11/2012", "low", "Inverter 1", " Dubai", "1581", "", "Active"],
+        ["09/06/2010", "low", "Inverter 2", " Moroco", "3059", "09/06/2010", "Resolved"],
+        ["10/04/2009", "low", "Inverter 3", " Moroco", "1721", "10/04/2009", "Resolved"],
+        ["13/10/2012", "low", "Inverter 4", " Dubai", "2558", "13/10/2012", "Resolved"],
+        ["26/09/2012", "low", "Inverter 5", " Ontario - Canada", "2290", "", "Active"],
+        ["03/09/2011", "low", "Inverter 1", " Moroco", "1937", "", "Active"],
+        ["25/06/2009", "low", "Inverter 2", " Moroco", "6154", "", "Active"],
+        ["12/12/2011", "low", "Inverter 3", " Moroco", "8330", "", "Active"],
+        ["20/09/2010", "low", "Inverter 4", " Hanoi - Vietnam", "3023", "20/09/2010", "Resolved"],
+        ["09/10/2009", "low", "Inverter 5", " Dubai", "5797", "09/10/2009", "Resolved"],
+        ["22/12/2010", "low", "Inverter 1", " Ontario - Canada", "8822", "", "Active"],
+        ["14/11/2010", "low", "Inverter 2", " Hanoi - Vietnam", "9239", "", "Active"],
+        ["07/06/2011", "low", "Inverter 3", " Dubai", "1314", "", "Active"],
+        ["11/03/2010", "low", "Inverter 4", " Dubai", "2947", "11/03/2010", "Resolved"],
+        ["14/08/2011", "low", "Inverter 5", " Ontario - Canada", "8899", "14/08/2011", "Resolved"],
+        ["02/06/2011", "low", "Inverter 1", " Hanoi - Vietnam", "2769", "", "Active"],
+        ["22/10/2009", "low", "Inverter 2", " Dubai", "6832", "", "Active"],
+        ["07/05/2011", "low", "Inverter 3", " Dubai", "3606", "", "Active"],
+        ["26/10/2008", "low", "Inverter 4", " Dubai", "2860", "", "Active"],
+        ["09/03/2011", "low", "Inverter 5", " Ontario - Canada", "8240", "09/03/2011", "Resolved"],
+        ["09/12/2009", "low", "Inverter 1", " Dubai", "5384", "09/12/2009", "Resolved"]
+    ];
+
+
+    $(document).ready(function () {
+        $('#example').DataTable({
+            data: dataSet,
+            columns: [
+                {title: "Activation"},
+                {title: "Priority"},
+                {title: "System"},
+                {title: "Plants"},
+                {title: "Ticket"},
+                {title: "Date"},
+                {title: "Status"}
+            ]
+        });
+    });
+
+</script>

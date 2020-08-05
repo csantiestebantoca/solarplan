@@ -1,0 +1,102 @@
+<div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3><small>{{=T(message)}}</small></h3>
+        </div>
+    </div>
+    <div class="col-md-12">
+        <div class="block">
+            <div class="title">
+                <h5 class="panel-title"><i class="fa fa-line-chart"></i>
+                    {{=T(message)}} <a id="myBtn" href="#" class="pull-right" data-toggle="modal"
+                        data-target="#exampleModalCenter" style="display: none;">Settings <i class="fa fa-cog" aria-hidden="true"></i></a>
+                </h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Settings</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <label for="date">Date: </label>
+                    <input type="date" id="date" name="date">&nbsp;&nbsp;&nbsp;&nbsp;
+                    <label for="time">DateAxis: </label>
+                    <select class="select-css" id="time">
+                        {{for item in dates:}}
+                        {{if item==time:}}
+                        <option value="{{=item}}" selected>{{=item}}</option>
+                        {{else:}}
+                        <option value="{{=item}}">{{=item}}</option>
+                        {{pass}}
+                        {{pass}}
+                    </select>
+                    <br>
+                    <label for="serie">Serie: </label>
+                    <select class="select-css" id="serie" multiple>
+                        {{for item in features:}}
+                        {{if item in serie:}}
+                        <option value="{{=item}}" selected>{{=item}}</option>
+                        {{else:}}
+                        <option value="{{=item}}">{{=item}}</option>
+                        {{pass}}
+                        {{pass}}
+                    </select>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <!-- <input class="button" type="button" value="Select" onclick="redirect()"> -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="redirect()">Acept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    {{=ASSIGNJS(text = figure) }};
+    var obj = JSON.parse(text);
+    Plotly.newPlot('fig', obj.data, obj.layout);
+
+    function redirect() {
+        const myurl = "{{=URL('timeSeries', 'index')}}";
+        let param1 = document.getElementById('time').value;
+        let param2 = getArr(document.getElementById('serie').selectedOptions);
+        // location.href = myurl + "?time=" + param1 + "&serie=" + param2;
+        $(document.getElementById('navbarTarget')).load(myurl + "?time=" + param1 + "&serie=" + param2);
+    }
+    function getArr(obj) {
+        let arrResult = [];
+        Object.values(obj).forEach(element => {
+            arrResult.push(element.label);
+        });
+        return arrResult.toString();
+    }
+
+    var modal = document.getElementById("myModal");
+    var btn = document.getElementById("myBtn");
+    var span = document.getElementsByClassName("close")[0];
+    btn.onclick = function () {
+        modal.style.display = "block";
+    }
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>

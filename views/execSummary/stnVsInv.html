@@ -1,0 +1,57 @@
+<div id="page-wrapper">
+  <div class="row">
+      <div class="col-lg-12">
+        <h4><small>{{=T(message)}}</small></h4>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-sm-4">
+          <div class="block">
+              <div class="title">
+                  <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(message)}}</h5>
+              </div>
+              <div class="panel-body">
+                  <div id="fig1" style="height:270px"></div>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-8">
+          <div class="block">
+              <div class="title">
+                  <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(message)}}</h5>
+              </div>
+              <div class="panel-body">
+                  <div id="fig2" style="height:270px"></div>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-4">
+          <div class="block">
+              <div class="title">
+                  <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(message)}}</h5>
+              </div>
+              <div class="panel-body">
+                  <div id="fig3" style="height:270px"></div>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-8">
+          <div class="block">
+              <div class="title">
+                  <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(message)}}</h5>
+              </div>
+              <div class="panel-body">
+                  <div id="fig4" style="height:270px"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<script>
+    {{=ASSIGNJS(text = figure)}};
+    var obj = JSON.parse(text);
+    Plotly.newPlot('fig1', obj.data, obj.layout);
+    Plotly.newPlot('fig2', obj.data, obj.layout);
+    Plotly.newPlot('fig3', obj.data, obj.layout);
+    Plotly.newPlot('fig4', obj.data, obj.layout);
+</script>

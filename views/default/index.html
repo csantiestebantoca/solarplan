@@ -1,0 +1,217 @@
+{{extend 'layout.html'}}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+    crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+    integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+    crossorigin=""></script>
+<script src=" https://unpkg.com/@joergdietrich/leaflet.terminator@1.0.0/L.Terminator.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<script src='https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js'></script>
+
+<div class="row" ng-show="!selectedPlant">
+    <div class="col-xs-12 col-sm-8">
+        <div class="row" ng-show="!selectedPlant">
+            <div class="col-md-12">
+                <div class="block">
+                    <div class="title">
+                        <h5><i class="fa fa-map-o"></i> Map</h5>
+                    </div>
+                    <div class="">
+                        <div id="mapid" class="figure"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="col-xs-12">
+            <div class="block factoryList">
+                <div class="title cambiar" ng-repeat="plant in plants" ng-click="selectPlant(plant.id)"
+                    title="{! plant.name !}" style="cursor: pointer;">
+                    <h5><i class="fa fa-industry" aria-hidden="true"></i> {! plant.name !}</h5>
+                    <h6 class="subtitle">{! plant.location !}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="!selectedPlant">
+    <div class="col-xs-6 col-sm-3" ng-repeat="plant in plants" ng-click="selectPlant(plant.id)" title="{! plant.name !}"
+        style="cursor: pointer;">
+        <div class="block">
+            <div class="title">
+                <h5><i class="fa fa-industry" aria-hidden="true"></i> {! plant.name !}</h5>
+                <h6 class="subtitle">{! plant.location !}</h6>
+            </div>
+            <div>
+                <img src="{{=URL('static/images','solar.jpg')}}" style="width: 100%" alt="Solar plants">
+                <ul class="server-stats">
+                    <li>
+                        <div class="key pull-right">{! plant.tracker_width !}</div>
+                        <div class="stat">
+                            <div class="info">Tracker width</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! plant.tracker_width * 10 !}%;"
+                                    class="progress-bar progress-bar-danger"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">{! plant.tracker_pitch !}</div>
+                        <div class="stat">
+                            <div class="info">Tracker pitch</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! plant.tracker_pitch * 10 !}%;" class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">{! plant.loss !}</div>
+                        <div class="stat">
+                            <div class="info">Loss</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! plant.loss * 1000 !}%;" class="progress-bar progress-bar-inverse">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">{! plant.inverter_capacity !}</div>
+                        <div class="stat">
+                            <div class="info">Inverter capacity</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! plant.inverter_capacity / 100 !}%;"
+                                    class="progress-bar progress-bar-inverse"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-show="selectedPlant">
+    <div class="col-xs-12 col-sm-8">
+        <div class="block">
+            <div class="title">
+                <h5><i class="fa fa-bell"></i> Arlarms</h5>
+            </div>
+            <div style="overflow-x: auto;">
+                <table id="example" class="display" width="100%"></table>
+            </div>
+        </div>
+    </div>
+    <div class="col-xs-12 col-sm-4">
+        <div class="block">
+            <div class="title">
+                <h5><i class="fa fa-magnet"></i> Overview</h5>
+            </div>
+            <div>
+                <ul class="server-stats">
+                    <li>
+                        <div class="key pull-right">{! selectedPlant.tracker_width !}</div>
+                        <div class="stat">
+                            <div class="info">Tracker width</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! selectedPlant.tracker_width * 10 !}%;"
+                                    class="progress-bar progress-bar-danger"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">{! selectedPlant.tracker_pitch !}</div>
+                        <div class="stat">
+                            <div class="info">Tracker pitch</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! selectedPlant.tracker_pitch * 10 !}%;" class="progress-bar"></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">{! selectedPlant.loss !}</div>
+                        <div class="stat">
+                            <div class="info">Loss</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! selectedPlant.loss * 1000 !}%;"
+                                    class="progress-bar progress-bar-inverse">
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="key pull-right">{! selectedPlant.inverter_capacity !}</div>
+                        <div class="stat">
+                            <div class="info">Inverter capacity</div>
+                            <div class="progress progress-small">
+                                <div style="width: {! selectedPlant.inverter_capacity / 100 !}%;"
+                                    class="progress-bar progress-bar-inverse"></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Tabla de alarmas -->
+<script>
+    var dataSet = [
+        ["Activation", "Priority", "System", "Plant", "Ticket", "Date", "Status"],
+        ["25/04/2011", "higth", "Inverter 1", " Ontario - Canada", "5421", "", "Active"],
+        ["25/07/2011", "higth", "Inverter 2", " Ontario - Canada", "8422", "25/07/2011", "Resolved"],
+        ["12/01/2009", "higth", "Inverter 3", " Dubai", "1562", "12/01/2009", "Resolved"],
+        ["29/03/2012", "higth", "Inverter 4", " Ontario - Canada", "6224", "29/03/2012", "Resolved"],
+        ["28/11/2008", "higth", "Inverter 5", " Ontario - Canada", "5407", "", "Active"],
+        ["02/12/2012", "higth", "Inverter 1", " Moroco", "4804", "", "Active"],
+        ["06/08/2012", "higth", "Inverter 2", " Dubai", "9608", "", "Active"],
+        ["14/10/2010", "low", "Inverter 3", " Ontario - Canada", "6200", "", "Active"],
+        ["15/09/2009", "low", "Inverter 4", " Dubai", "2360", "15/09/2009", "Resolved"],
+        ["13/12/2008", "low", "Inverter 5", " Ontario - Canada", "1667", "13/12/2008", "Resolved"],
+        ["19/12/2008", "low", "Inverter 1", " Dubai", "3814", "", "Active"],
+        ["03/03/2013", "low", "Inverter 2", " Ontario - Canada", "9497", "", "Active"],
+        ["16/10/2008", "low", "Inverter 3", " Dubai", "6741", "", "Active"],
+        ["18/12/2012", "low", "Inverter 4", " Dubai", "3597", "18/12/2012", "Resolved"],
+        ["17/03/2010", "low", "Inverter 5", " Dubai", "1965", "17/03/2010", "Resolved"],
+        ["27/11/2012", "low", "Inverter 1", " Dubai", "1581", "", "Active"],
+        ["09/06/2010", "low", "Inverter 2", " Moroco", "3059", "09/06/2010", "Resolved"],
+        ["10/04/2009", "low", "Inverter 3", " Moroco", "1721", "10/04/2009", "Resolved"],
+        ["13/10/2012", "low", "Inverter 4", " Dubai", "2558", "13/10/2012", "Resolved"],
+        ["26/09/2012", "low", "Inverter 5", " Ontario - Canada", "2290", "", "Active"],
+        ["03/09/2011", "low", "Inverter 1", " Moroco", "1937", "", "Active"],
+        ["25/06/2009", "low", "Inverter 2", " Moroco", "6154", "", "Active"],
+        ["12/12/2011", "low", "Inverter 3", " Moroco", "8330", "", "Active"],
+        ["20/09/2010", "low", "Inverter 4", " Hanoi - Vietnam", "3023", "20/09/2010", "Resolved"],
+        ["09/10/2009", "low", "Inverter 5", " Dubai", "5797", "09/10/2009", "Resolved"],
+        ["22/12/2010", "low", "Inverter 1", " Ontario - Canada", "8822", "", "Active"],
+        ["14/11/2010", "low", "Inverter 2", " Hanoi - Vietnam", "9239", "", "Active"],
+        ["07/06/2011", "low", "Inverter 3", " Dubai", "1314", "", "Active"],
+        ["11/03/2010", "low", "Inverter 4", " Dubai", "2947", "11/03/2010", "Resolved"],
+        ["14/08/2011", "low", "Inverter 5", " Ontario - Canada", "8899", "14/08/2011", "Resolved"],
+        ["02/06/2011", "low", "Inverter 1", " Hanoi - Vietnam", "2769", "", "Active"],
+        ["22/10/2009", "low", "Inverter 2", " Dubai", "6832", "", "Active"],
+        ["07/05/2011", "low", "Inverter 3", " Dubai", "3606", "", "Active"],
+        ["26/10/2008", "low", "Inverter 4", " Dubai", "2860", "", "Active"],
+        ["09/03/2011", "low", "Inverter 5", " Ontario - Canada", "8240", "09/03/2011", "Resolved"],
+        ["09/12/2009", "low", "Inverter 1", " Dubai", "5384", "09/12/2009", "Resolved"]
+    ];
+
+    $(document).ready(function () {
+        $('#example').DataTable({
+            data: dataSet,
+            columns: [
+                { title: "Activation" },
+                { title: "Priority" },
+                { title: "System" },
+                { title: "Plants" },
+                { title: "Ticket" },
+                { title: "Date" },
+                { title: "Status" }
+            ]
+        });
+    });
+</script>

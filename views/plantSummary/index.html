@@ -1,0 +1,107 @@
+<div id="page-wrapper">
+  <div class="row">
+      <div class="col-lg-12">
+        <h4><small>{{=T(message)}}</small></h4>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-6">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-line-chart"></i> {{=T(msgPow)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig1"></div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-area-chart"></i> {{=T(msgCorr)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig2"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{=T(msgBarInv)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig3"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-6">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-line-chart"></i> {{=T(msgCorrReg)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig4"></div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-table"></i> {{=T(msgSum)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig5"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-6">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{=T(msgBar)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig6"></div>
+              </div>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="block">
+              <div class="title" align="center">
+                  <h4 class="panel-title"><i class="fa fa-bar-chart-o"></i> {{=T(msgBar2)}}</h4>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig7"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<script>
+    {{=ASSIGNJS(text = figPow)}};
+    Plotly.newPlot('fig1', JSON.parse(text).data, JSON.parse(text).layout);
+
+    {{=ASSIGNJS(text = figCorr)}};
+    Plotly.newPlot('fig2', JSON.parse(text).data, JSON.parse(text).layout);
+
+    {{=ASSIGNJS(text = figBarInv)}};
+    Plotly.newPlot('fig3', JSON.parse(text).data, JSON.parse(text).layout);
+
+    {{=ASSIGNJS(text = figCorrReg)}};
+    Plotly.newPlot('fig4', JSON.parse(text).data, JSON.parse(text).layout);
+
+    {{=ASSIGNJS(text = figSum)}};
+    Plotly.newPlot('fig5', JSON.parse(text).data, JSON.parse(text).layout);
+
+    {{=ASSIGNJS(text = figBar)}};
+    Plotly.newPlot('fig6', JSON.parse(text).data, JSON.parse(text).layout);
+
+    {{=ASSIGNJS(text = figBar2)}};
+    Plotly.newPlot('fig7', JSON.parse(text).data, JSON.parse(text).layout);
+</script>

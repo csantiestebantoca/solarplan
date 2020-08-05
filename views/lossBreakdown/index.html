@@ -1,0 +1,38 @@
+<div id="page-wrapper">
+  <div class="row">
+      <div class="col-lg-12">
+        <h4><small>{{=T(message)}}</small></h4>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+          <div class="block">
+              <div class="title" align="center">
+                  <h5 class="panel-title"><i class="fa fa-pie-chart"></i> {{=T(message)}}</h5>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig1"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col-md-12">
+          <div class="block">
+              <div class="title" align="center">
+                  <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msgWaterF)}}</h5>
+              </div>
+              <div class="panel-body">
+                  <div class="figure" id="fig2" style="height:450px"></div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<script>
+    {{=ASSIGNJS(text1 = figure)}};
+    Plotly.newPlot('fig1', JSON.parse(text1));
+
+    {{=ASSIGNJS(text2 = figWaterF)}};
+    Plotly.newPlot('fig2', JSON.parse(text2));
+</script>

@@ -1,0 +1,140 @@
+<div id="page-wrapper">
+    <div class="row">
+      <div class="col-lg-12">
+        <h4><small>{{=T(title)}}</small></h4>
+      </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg1)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig1"></div>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg2)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig2"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg3)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig3"></div>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg4)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig4"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg5)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig5"></div>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg6)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig6"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg7)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig7"></div>
+            </div>
+        </div>
+        </div>
+        <div class="col-md-6">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msg8)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="fig8"></div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="row">
+    <div class="col-md-12">
+        <div class="block">
+            <div class="title" align="center">
+                <h5 class="panel-title"><i class="fa fa-table"></i> {{=T(msgViolin)}}</h5>
+            </div>
+            <div class="panel-body">
+                <div class="figure" id="figViolin"></div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+<script>
+    {{=ASSIGNJS(text = fig1)}};
+    Plotly.newPlot('fig1', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig2)}};
+    Plotly.newPlot('fig2', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig3)}};
+    Plotly.newPlot('fig3', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig4)}};
+    Plotly.newPlot('fig4', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig5)}};
+    Plotly.newPlot('fig5', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig6)}};
+    Plotly.newPlot('fig6', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig7)}};
+    Plotly.newPlot('fig7', JSON.parse(text));
+
+    {{=ASSIGNJS(text = fig8)}};
+    Plotly.newPlot('fig8', JSON.parse(text));
+
+    {{=ASSIGNJS(text = figViolin)}};
+    Plotly.newPlot('figViolin', JSON.parse(text));
+</script>

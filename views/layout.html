@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html class="no-js h-100" lang="{{=T.accepted_language or 'en'}}" ng-app="Administracion">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <!-- www.phpied.com/conditional-comments-block-downloads/ -->
+    <!-- Always force latest IE rendering engine
+         (even in intranet) & Chrome Frame
+         Remove this if you use the .htaccess -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge{{=not request.is_local and ',chrome=1' or ''}}">
+    <!--  Mobile Viewport Fix
+          j.mp/mobileviewport & davidbcalhoun.com/2010/viewport-metatag
+          device-width: Occupy full width of the screen in its current orientation
+          initial-scale = 1.0 retains dimensions instead of zooming out if page height > device height
+          user-scalable = yes allows the user to zoom in -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{=response.title or request.application}}</title>
+    <!-- http://dev.w3.org/html5/markup/meta.name.html -->
+    <meta name="application-name" content="{{=request.application}}">
+    <!-- Speaking of Google, don't forget to set your site up:
+         http://google.com/webmasters -->
+    <meta name="google-site-verification" content="">
+    <!-- include stylesheets -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="{{=URL('static','bootstrap/css/bootstrap.min.css')}}" />
+    <link rel="stylesheet" href="{{=URL('static','css/web2py-bootstrap4.css')}}" />
+    <link rel="shortcut icon" href="{{=URL('static','images/favicon.ico')}}" type="image/x-icon">
+    <link rel="apple-touch-icon" href="{{=URL('static','images/favicon.png')}}">
+    <!-- All JavaScript at the bottom, except for Modernizr which enables
+         HTML5 elements & feature detects -->
+    <script src="{{=URL('static','js/modernizr-2.8.3.min.js')}}"></script>
+    <!-- Favicons -->
+    {{include 'web2py_ajax.html'}}
+    <!-- this includes jquery.js, calendar.js/.css and web2py.js -->
+    {{block head}}{{end}}
+
+    <!-- The javascript =============================== -->
+    <script src="{{=URL('static','bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{=URL('static','js/web2py-bootstrap4.js')}}"></script>
+    <!-- in welcome layout it is right after <footer> -->
+
+
+    <!-- beyond web2py =============================== -->
+    <!-- Custom Font Icons CSS -->
+    <link rel="stylesheet" href="{{=URL('static','dark_admin/css/font.css')}}">
+    <!-- Google Fonts - Muli -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,700">
+    <!-- theme stylesheet -->
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','dark_admin/css/style.blue.css')}}" />
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','dark_admin/css/custom.css')}}" />
+    <!-- Plotly, here because it is used immediately -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- you need to include the shieldui css and js assets in order for the charts to work -->
+    <link rel="stylesheet" type="text/css"
+        href="http://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
+    <link id="gridcss" rel="stylesheet" type="text/css"
+        href="http://www.shieldui.com/shared/components/latest/css/dark-bootstrap/all.min.css" />
+
+    <script type="text/javascript"
+        src="http://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
+    <script type="text/javascript" src="http://www.prepbootstrap.com/Content/js/gridData.js"></script>
+    <link rel="stylesheet" type="text/css" href="{{=URL('static','css/custom.css')}}" />
+
+    <script src='https://code.jquery.com/jquery-3.3.1.js'></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <script src='https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js'></script>
+
+</head>
+
+<body ng-controller="ControladorPrincipal" ng-init="initialization()" class="mb-0 h-100">
+    <div id="wrapper" class="h-100 d-flex flex-column">
+        <header class="header mb-0">
+            <nav class="navbar navbar-expand-lg py-2">
+                <div class="container-fluid d-flex align-items-center justify-content-between">
+                    <div class="navbar-header">
+                        <!-- Navbar Header-->
+                        <a href="index.html" class="navbar-brand">
+                            <div class="brand-text brand-big text-uppercase visible">
+                                <strong class="text-primary">SOLAR</strong><strong>PLANTS</strong>
+                            </div>
+                            <div class="brand-text brand-sm">
+                                <strong class="text-primary">S</strong><strong>P</strong>
+                            </div>
+                        </a>
+                        <!-- Sidebar Toggle Btn-->
+                        <button class="sidebar-toggle" style="display: none;">
+                            <i class="fa fa-long-arrow-left"></i>
+                        </button>
+
+                    </div>
+                    <div class="right-menu list-inline no-margin-bottom">
+                        <a id="btnSettings" href="#" data-toggle="modal" data-target="#exampleModalCenter">
+                            <i class="fa fa-cog" aria-hidden="true"></i> Settings
+                        </a>
+
+                        <div class="list-inline-item dropdown">
+                            <a id="" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                                class="nav-link messages-toggle" ng-show="authUser">
+                                <i class="fa fa-user"></i>
+                                <span id="userName"></span>
+                            </a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-user"></i> Profile
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa fa-gear"></i> Settings
+                                </a>
+                                <a class="dropdown-item" href="#" ng-click="logout()">
+                                    <i class="fa fa-power-off"></i> Log Out
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div class="flex-fill overflow-hidden d-flex">
+            <!-- Sidebar Navigation-->
+            <nav id="sidebar" class="h-100 overflow-auto" ng-show="selectedPlant">
+                <!-- Sidebar Navidation Menus-->
+                <span class="heading mt-3">{! selectedPlant ? selectedPlant.name : 'Main' !}</span>
+                <ul class="list-unstyled">
+                    <li class="active">
+                        <a id="dash" href="{{=URL('default', 'index')}}">
+                            <i class="fa fa-globe"></i>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="#sbmc1" data-toggle="collapse">
+                            Performance analysis
+                        </a>
+                        <ul id="sbmc1" class="collapse list-unstyled ">
+                            <li>
+                                <a href="{{=URL('plantSummary', 'index')}}">
+                                    <i class="fa fa-bar-chart"></i>
+                                    Plant Summary
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('execSummary', 'index')}}">
+                                    <i class="fa fa-table"></i>
+                                    Basic KPIs
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('inverterLosses', 'index')}}">
+                                    <i class="fa fa-table"></i>
+                                    Inverter Losses
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('lossBreakdown', 'index')}}">
+                                    <i class="fa fa-pie-chart"></i>
+                                    Loss Breakdown
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('shutAndStart', 'index')}}">
+                                    <i class="fa fa-bar-chart"></i>
+                                    Shutdown and Startup
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('performStnInv', 'index')}}">
+                                    <i class="fa fa-table"></i>
+                                    Stn Inv Performance
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="#sbmc2" data-toggle="collapse">
+                            Alarm management
+                        </a>
+                        <ul id="sbmc2" class="collapse list-unstyled ">
+                            <li>
+                                <a href="{{=URL('alarms', 'index', args=['Alarms list'])}}">
+                                    <i class="fa fa-list"></i>
+                                    Alarms list
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('default', 'vacia', args=['Pareto'])}}">
+                                    <i class="fa fa-line-chart"></i>
+                                    Pareto
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="{{=URL('default', 'heatmap')}}">
+                            String performance analysis
+                        </a>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="#sbmc3" data-toggle="collapse">
+                            Tracker analysis
+                        </a>
+                        <ul id="sbmc3" class="collapse list-unstyled ">
+                            <li>
+                                <a href="{{=URL('timeSeriesTracker', 'index')}}">
+                                    <i class="fa fa-line-chart"></i>
+                                    Angle Distribution
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('trackerHeatMap', 'index')}}">
+                                    <i class="fa fa-table"></i>
+                                    Heatmap 1..3
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('execSummary', 'index')}}">
+                                    <i class="fa fa-table"></i>
+                                    Table
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="{{=URL('realTimer', 'index')}}">
+                            Real time values
+                        </a>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="#sbmc4" data-toggle="collapse">
+                            Reports
+                        </a>
+                        <ul id="sbmc4" class="collapse list-unstyled ">
+                            <li>
+                                <a href="{{=URL('default', 'vacia', args=['Update BD'])}}">
+                                    <i class="fa fa-database"></i>
+                                    Update BD...
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="#sbmc5" data-toggle="collapse">
+                            Field analysis
+                        </a>
+                        <ul id="sbmc5" class="collapse list-unstyled ">
+                            <li>
+                                <a href="{{=URL('fielData', 'index')}}">
+                                    <i class="fa fa-area-chart"></i>
+                                    Transformer analysis
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('default', 'vacia', args=['IV Tracing analysis'])}}">
+                                    <i class="fa fa-bar-chart"></i>
+                                    IV Tracing analysis
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="#sbmc6" data-toggle="collapse">
+                            Advanced analysis
+                        </a>
+                        <ul id="sbmc6" class="collapse list-unstyled ">
+                            <li>
+                                <a href="{{=URL('timeSeries', 'index')}}">
+                                    <i class="fa fa-line-chart"></i>
+                                    Time series
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('default', 'correlation')}}">
+                                    <i class="fa fa-area-chart"></i>
+                                    Correlation analysis
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('default', 'category')}}">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    Category analysis
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{=URL('default', 'histogram')}}">
+                                    <i class="fa fa-bar-chart-o"></i>
+                                    Histogram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li ng-show="authUser && selectedPlant">
+                        <a href="{{=URL('farmsControl', 'index', args=['Farms control'])}}">
+                            Farms control
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            <!-- Sidebar Navigation end-->
+            <div class="page-content h-100 overflow-auto"
+                style="width: {! selectedPlant ? 'calc(100% - 240px)' : '100%' !};">
+                <div class="page-header">
+                    <div class="container-fluid">
+                        <h5 class="h5 no-margin-bottom"> </h5>
+                    </div>
+                </div>
+                <section class="no-padding-top no-padding-bottom">
+                    <div id="navbarTarget" class="container-fluid">
+                        <!-- <div class="row"> -->
+                        {{include}}
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    <!-- #endregion NAV -->
+
+    <!-- #region PAGE CONTENT -->
+
+    <!-- #endregion PAGE CONTENT -->
+
+    <!-- JavaScript files -->
+    <!--
+<script src="{{=URL('static','dark_admin/vendor/jquery/jquery.min.js')}}"></script>
+-->
+    <script src="{{=URL('static','dark_admin/vendor/popper.js/umd/popper.min.js')}}"></script>
+    <!--
+<script src="{{=URL('static','dark_admin/vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+-->
+    <script src="{{=URL('static','dark_admin/vendor/jquery.cookie/jquery.cookie.js')}}"></script>
+    <script src="{{=URL('static','dark_admin/vendor/chart.js/Chart.min.js')}}"></script>
+    <script src="{{=URL('static','dark_admin/vendor/jquery-validation/jquery.validate.min.js')}}"></script>
+    <!--script src="{{=URL('static','dark_admin/js/charts-home.js')}}"></script-->
+    <script src="{{=URL('static','dark_admin/js/front.js')}}"></script>
+
+    <!-- Angular -->
+    <script src="{{=URL('static','js/angular.min.js')}}"></script>
+    <script src="{{=URL('static','js/angularController.js')}}"></script>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/5.10.1/firebase.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.5.0/firebase-ui-auth.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/ui/4.0.0/firebase-ui-auth__es_419.js"></script> -->
+    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/4.0.0/firebaseui.css" />
+    <script src="{{=URL('static','js/firebaseCommunication.js')}}"></script>
+
+    <!-- Analytics -->
+    {{block page_js}}{{end page_js}}
+
+    {{if response.google_analytics_id:}}
+    <!-- Analytics -->
+    <script src="{{=URL('static','js/analytics.min.js')}}"></script>
+    <script type="text/javascript">
+        analytics.initialize({
+            'Google Analytics': { trackingId: '{{=response.google_analytics_id}}' }
+        });
+    </script>
+
+    {{pass}}
+    <script type="text/javascript">
+        document.querySelectorAll('nav#sidebar a').forEach(a => {
+            if (a.id != "dash") {
+                a.onclick = ev => {
+                    ev.preventDefault();
+                    if (!ev.target.dataset.toggle) {
+                        $(document.getElementById('navbarTarget')).load(ev.target.href)
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- #endregion JAVASCRIPT -->
+</body>
+
+</html>
