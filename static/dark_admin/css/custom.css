@@ -1,0 +1,37 @@
+/* your styles go here */
+
+nav#sidebar {
+    color: #abb4be;
+    font-size: .9rem;
+}
+
+nav#sidebar li a {
+    padding: 12px 20px;
+}
+
+nav#sidebar li a i {
+    margin-right: 10px;
+    padding-right: 0;
+    border-right: unset;
+}
+
+nav#sidebar li li a {
+    padding-left: 10px;
+}
+
+.page-content {
+    background-color: #171717;
+    color: whitesmoke;
+}
+
+.page-header {
+    background-color: #171717;
+    color: whitesmoke;
+}
+/* otras combinaciones dark
+    bg #15385a
+    color #7693ab & #f1c40f
+*/
+nav.navbar .dropdown-menu {
+    margin-top: 0;
+}

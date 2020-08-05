@@ -1,0 +1,83 @@
+nav#sidebar {
+  width: 240px;
+  /*margin-top: 55px;*/
+}
+
+.page-content {
+  width: calc(100% - 240px);
+  min-height: unset;
+}
+
+@media (max-width: 1199px) {
+  .page-content {
+    width: 100%;
+  }
+}
+
+.figure {
+  width: 100% !important;
+  height: 320px;
+}
+
+.factoryList {
+    height: 380px;
+    overflow: auto;
+}
+
+.block {
+  padding: 10px 5px 0;
+  background: #0e0e0e;
+  border: 1px solid white;
+  border-radius: 5px;
+}
+
+.block ul {
+  list-style: none;
+  margin-left: -40px;
+  font-size: 0.7em;
+}
+
+.subtitle {
+  font-size: 0.7em;
+  margin: -10px 0 0 25px;
+}
+
+.modal-open .modal .modal-content {
+  border-radius: 5px;
+  background: #2d3035;
+  border: 1px solid white;
+  box-shadow: 2px 2px 10px grey;
+}
+
+.cambiar:hover
+{
+  background:#222;
+}
+
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
+
+.contenedor::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+.contenedor::-webkit-scrollbar:vertical {
+  width:1px;
+}
+
+.contenedor::-webkit-scrollbar-button:increment,.contenedor::-webkit-scrollbar-button {
+  display: none;
+} 
+
+.contenedor::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+.contenedor::-webkit-scrollbar-thumb {
+  background-color: #222;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+.contenedor::-webkit-scrollbar-track {
+  border-radius: 10px;  
+}
