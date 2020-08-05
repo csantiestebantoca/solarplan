@@ -1,0 +1,400 @@
+<style>
+    .border-1 {
+        border-color: #ccc !important;
+    }
+
+    .bg-1 {
+        background-color: #e9ecef !important;
+    }
+
+    #compTopMenu .form-control, #compTopMenu .custom-select {
+        height: unset;
+        padding-top: 4px;
+        padding-bottom: 4px;
+    }
+
+    .mw-210 {
+        min-width: 210px;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        height: calc(1.5em + .75rem + 2px);
+        padding: .375rem .75rem;
+        font-size: 1rem;
+        font-weight: 400;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: .25rem;
+        transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    }
+
+    .form-control:disabled, .form-control[readonly] {
+        background-color: #e9ecef;
+        opacity: 1;
+    }
+
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 .2rem rgba(0, 123, 255, .25);
+    }
+
+    #dataToServer li {
+        padding: 3px 5px;
+    }
+
+    .selection-variable i {
+        opacity: 0;
+        position: absolute;
+        right: 5px;
+        top: 7px;
+    }
+
+    .selection-variable:hover i {
+        opacity: 1;
+    }
+
+    .selection-variable:hover {
+        background-color: #bedfff;
+    }
+</style>
+
+<div class="border container bg-white">
+    <div class="row" id="compTopMenu">
+        <div class="col-3 border border-1 dropdown p-0" id="dropdownPeriod">
+            <button class="w-100 btn btn-light text-left" data-toggle="dropdown">
+                + Period
+            </button>
+            <div class="bg-light border-1 dropdown-menu p-0 shadow w-100">
+                <div class="modal-body text-dark">
+                    <p class="font-weight-bold">Range</p>
+                    <div class="row my-3">
+                        <div class="col-3">
+                            From:
+                        </div>
+                        <div class="col">
+                            <input type="date" class="form-control" name="from">
+                        </div>
+                    </div>
+                    <div class="row my-3">
+                        <div class="col-3">
+                            to:
+                        </div>
+                        <div class="col">
+                            <input type="date" class="form-control" name="to">
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-primary mb-2" onclick="handlePeriodOkClick()">
+                            <i class="far fa-check-circle" style="font-size: large"></i>
+                            Ok
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-9 border border-1 dropdown p-0" id="dropdownParameters">
+            <button class="w-100 btn btn-light text-left" data-toggle="dropdown">
+                + Parameters
+            </button>
+            <div class="bg-light border-1 dropdown-menu p-0 shadow w-100">
+                <div class="modal-body position-relative text-dark">
+                    <div class="bg-1 modal-body border border-1" style="min-height: 160px">
+                        <div class="form-row" id="pathControlsContainer">
+                            <div class="form-group col-auto">
+                                <label for="elementType">Element type</label>
+                                <select class="form-control" id="elementType">
+                                    <option></option>
+                                </select>
+                            </div>
+                            <!-- place for complementary controls -->
+                        </div>
+                    </div>
+                    <div class="border border-1 bg-white my-3 overflow-auto "
+                         style="height: 160px">
+                        <div class="position-relative">
+                            <table class="table table-sm table-borderless">
+                                <colgroup>
+                                    <col style="width:1px">
+                                </colgroup>
+                                <tbody id="variablesContainer"></tbody>
+                            </table>
+                            <div class="position-absolute bg-white h-100"
+                                 style="top:0;bottom:0;left:0;right:0;opacity:.5"
+                                 id="variablesContainerLock">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-primary mb-2" onclick="handleParametersOkClick()">
+                            <i class="far fa-check-circle" style="font-size: large"></i>
+                            Ok
+                        </button>
+                    </div>
+                    <div class="position-absolute align-items-center d-none" style="top:0;bottom:0;left:0;right:0"
+                         id="parameterFormWait">
+                        <div class="bg-dark w-25 mx-auto py-5 d-flex justify-content-center rounded" style="opacity:.5">
+                            <div class="spinner-border text-white" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 1px">
+        <div class="col-12 border border-1 py-2 bg-light text-dark">
+            Selection
+        </div>
+        <div class="col-12 overflow-auto" style="min-height: 140px;max-height: 184px">
+            <ul id="dataToServer" class="list-unstyled text-dark"></ul>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    var ul = document.getElementById('dataToServer');
+    var display = () => {
+        let htmlString = '';
+        htmlString = `
+<li>
+<span class="font-weight-bold">start:</span> ${selection.start}
+<span class="ml-3 font-weight-bold">end:</span> ${selection.end}
+</li>
+<li><span class="font-weight-bold">variables:</span></li>`;
+        selection.parameters.forEach(parameter => {
+            htmlString += `
+<li class="selection-variable position-relative rounded"
+    data-type="${parameter['elementType']}"
+    data-instance="${parameter['instanceId']}"
+    data-variable="${parameter['variable']}">
+<span class="text-danger">${parameter['elementName']}</span>
+-
+<span class="text-success"> ${parameter['instanceName']}</span>
+-
+<span class="font-weight-bold">${parameter['variable']}</span>
+<i class="fas fa-times-circle" onclick="selectionVariableClick(this.parentNode)"></i>
+</li>`;
+        });
+        ul.innerHTML = htmlString;
+    };
+    var selectionVariableClick = ({dataset}) => {
+        selection.parameters = selection.parameters.filter(e =>
+                !((e.elementType === dataset.type)
+                        && (e.instanceId === dataset.instance)
+                        && (e.variable === dataset.variable))
+        );
+        display();
+    }
+</script>
+
+<script>
+    var plantId = 1;  // It is a UI attribute
+    var selection = {start: '', end: '', parameters: []};
+
+    var parameterFormWaitIndicator = document.getElementById('parameterFormWait');
+    var wait = () => {
+        parameterFormWaitIndicator.classList.toggle('d-flex');
+        parameterFormWaitIndicator.classList.toggle('d-none');
+    };
+
+    {
+        const dropdownPeriod = document.getElementById('dropdownPeriod');
+
+        dropdownPeriod.querySelector('.dropdown-menu').onclick = ev => ev.stopPropagation();
+
+        function handlePeriodOkClick() {
+            selection.start = dropdownPeriod.querySelector('[name="from"]').value;
+            selection.end = dropdownPeriod.querySelector('[name="to"]').value;
+            display();
+            dropdownPeriod.click();
+        }
+    }
+
+    {
+
+        const dropdownParameters = document.getElementById('dropdownParameters');
+        const elementTypeControl = document.getElementById('elementType');
+        const pathControlsContainer = document.getElementById('pathControlsContainer');
+        const variablesContainer = document.getElementById('variablesContainer');
+        const variablesContainerLock = document.getElementById('variablesContainerLock');
+        let pathArray, selectedSheet;  // Evaluated on elementTypeControl change
+        let currentInstances;  // Evaluated on a path control change (for next control populate)
+        let sheets;
+
+        dropdownParameters.querySelector('.dropdown-menu').onclick = ev => ev.stopPropagation();
+
+        const getSheets = () => {
+            wait();
+            return fetch('{{=URL('menu', 'children')}}')
+                    .then(resp => resp.json())
+                    .then(json => {
+                        wait();
+                        return json
+                    })
+                    .catch(error => console.log(error))
+        };
+        const getInstances = (idTree, parentInstanceId, selfish) => {
+            wait();
+            return fetch(`{{=URL('menu', 'instances')}}/${idTree}/${parentInstanceId}${selfish}`)
+                    .then(resp => resp.json())
+                    .then(json => {
+                        wait();
+                        currentInstances = json;
+                        return json
+                    })
+                    .catch(error => console.log(error))
+        };
+        const getVariables = idTree => {
+            return fetch(`{{=URL('menu', 'variables')}}/${idTree}`)
+                    .then(resp => resp.json())
+                    .catch(error => console.log(error))
+        };
+        const setOptions = (json, value, description, target) => {
+            json.forEach(row => {
+                const option = document.createElement('option');
+                option.value = row[value];
+                option.innerText = row[description];
+                target.appendChild(option);
+            })
+        };
+        const setVariables = (json, target) => {
+            target.innerHTML = '';
+            json.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+<td><input type="checkbox" name="${row}" value="${row}"></td>
+<td><label for="${row}" class=""> ${row}</label></td>`;
+                target.appendChild(tr);
+            })
+        };
+        const sheetSelect = value => sheets.filter(row => row['Id_Tree'] === value)[0];
+        const instanceSelect = value => currentInstances.filter(row => row['ID'] === value)[0];
+        const removeControls = () => pathControlsContainer.querySelectorAll('.form-group').forEach((e, i) => i && e.remove());
+        const removeVariables = () => variablesContainer.innerHTML = '';
+        const enableVariables = () => variablesContainerLock.classList.add('d-none');
+        const disableVariables = () => variablesContainerLock.classList.remove('d-none');
+
+        elementTypeControl.onchange = ({target}) => {
+            removeControls();
+            removeVariables();
+            disableVariables();
+            // Clear data of any selection **********************************
+            if (target.value) {
+                const idTree = parseInt(target.value);
+                selectedSheet = sheetSelect(idTree);
+                pathArray = selectedSheet['Path'].split('.');
+                renderControls();
+                renderOptions(1, plantId);
+                renderVariables(idTree);
+            }
+        };
+
+        getSheets().then(json => {
+            sheets = json;
+            setOptions(json.filter(row => row['Content']), 'Id_Tree', 'Sheet', elementTypeControl);
+        });
+
+        const renderControls = () => {
+            pathArray.forEach((element, index) => {
+                if (index) {
+                    const sheet = sheetSelect(parseInt(element));
+                    const formGroup = document.createElement('div');
+                    formGroup.className = 'form-group col-auto';
+                    formGroup.innerHTML = `
+                  <label for="elementType" class="text-nowrap">${sheet['Sheet']}</label>
+                  <select class="form-control mw-210" data-index="${index}" disabled>
+                    <option></option>
+                  </select>`;
+                    pathControlsContainer.appendChild(formGroup);
+                    const select = formGroup.querySelector('select');
+                    if (index === (pathArray.length - 1)) { // final control
+                        // Just enable variables selection
+                        select.onchange = ({target}) => {
+                            if (target.value) {
+                                enableVariables()
+                            } else {
+                                disableVariables();
+                            }
+                        };
+                    } else {  // intermediate control
+                        select.onchange = ({target}) => {
+                            removeOptions(index + 1);
+                            disableVariables();
+                            if (target.value) {
+                                renderOptions(index + 1, target.value);
+                            }
+                        }
+                    }
+                }
+            })
+        };
+
+        const removeOptions = pathIndex => {
+            for (let i = pathIndex; i < pathArray.length; i++) {
+                const control = pathControlsContainer.querySelector(`[data-index="${i}"]`);
+                control.innerHTML = '<option></option>';
+                control.disabled = true;
+            }
+        };
+
+        const renderOptions = (pathIndex, parentId) => {
+            const isLastIndex = pathIndex === (pathArray.length - 1);
+            const selfish = isLastIndex ? '/1' : '';
+            const idTree = pathArray[pathIndex];
+            getInstances(idTree, parentId, selfish).then(instances => {
+                const control = pathControlsContainer.querySelector(`[data-index="${pathIndex}"]`);
+                setOptions(instances, 'ID', 'DESCRIPTION', control);
+                control.disabled = false;
+            });
+        };
+
+        const renderVariables = (idTree) => {
+            getVariables(idTree).then(variables => {
+                setVariables(variables, variablesContainer)
+            });
+        };
+
+        function handleParametersOkClick() {
+            const exist = (l, o) => {
+                let result = false;
+                l.forEach(li => {
+                    const a = li.elementType == o.elementType;
+                    const b = li.instanceId == o.instanceId;
+                    const c = li.variable == o.variable;
+                    if (a && b && c) result = true;
+                });
+                return result;
+            };
+            const elementType = elementTypeControl.value;
+            const finalIndex = pathArray.length - 1;
+            const finalControl = pathControlsContainer.querySelector(`[data-index="${finalIndex}"]`);
+            const instanceId = finalControl ? finalControl.value : '';
+            const inputs = variablesContainer.querySelectorAll(':checked');
+            if (elementType && instanceId && inputs.length) {
+                inputs.forEach(input => {
+                    const obj = {
+                        elementType: elementType,
+                        elementName: selectedSheet['Sheet'],
+                        instanceId: instanceId,
+                        instanceName: instanceSelect(parseInt(instanceId))['DESCRIPTION'],
+                        variable: input.value
+                    };
+                    if (!exist(selection.parameters, obj)) selection.parameters.push(obj)
+                });
+                dropdownParameters.click();  // $(dropdownParameters).dropdown('hide');
+                display();
+            }
+        }
+    }
+</script>
+
