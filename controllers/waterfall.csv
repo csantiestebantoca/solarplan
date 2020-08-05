@@ -1,0 +1,15 @@
+Loss Mode,Loss Value
+Quality Gain,0.385
+Loss Due to Temperature,-2.618041369
+Reflection (IAM) Loss,-0.140934517
+Light Induced Degradation,-1.5
+Loss Due to Irradiance Level,-0.236408399
+DC Ohmic Loss,-1.445705921
+Inverter Efficiency Loss,-1.557577423
+Loss Over Inverter Power and Limiting,-6.392408318
+AC Ohmic and Transformer Loss,-1.733228025
+Night Consumption,-0.067064516
+Power Threshold Loss,-0.030376221
+Missmatch Losses,-0.3
+Expected before Aggregate,0
+Aggregate Loss,-4.772469461

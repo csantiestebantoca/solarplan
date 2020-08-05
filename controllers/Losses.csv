@@ -1,0 +1,12 @@
+Losses,Type,Name,values
+Losses,DC,IAM,0.69
+Losses,DC,Thermal, 12.77
+Losses,DC,LID,7.32
+Losses,DC,Irradiance Level,1.15
+Losses,AC,Inverter Efficiency,7.60
+Losses,DC,Ohmic,7.05
+Losses,AC,AC Ohmic,8.46
+Losses,DC,Limiting,31.19
+Losses,DC,Power Threshold,0.15
+Losses,DC,Aggregated,23.29
+Losses,AC,Night Consumption,0.33

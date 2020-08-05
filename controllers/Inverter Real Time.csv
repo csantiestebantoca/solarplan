@@ -1,0 +1,21 @@
+Station,Inverter,AC Power
+Station 1,Inverter 1,300
+Station 1,Inverter 2,700
+Station 1,Inverter 3,0
+Station 1,Inverter 4,700
+Station 1,Inverter 5,550
+Station 2,Inverter 1,700
+Station 2,Inverter 2,700
+Station 2,Inverter 3,700
+Station 2,Inverter 4,700
+Station 2,Inverter 5, None
+Station 3,Inverter 1,700
+Station 3,Inverter 2,680
+Station 3,Inverter 3,700
+Station 3,Inverter 4,700
+Station 3,Inverter 5, None
+Station 4,Inverter 1,700
+Station 4,Inverter 2,630
+Station 4,Inverter 3,700
+Station 4,Inverter 4,700
+Station 4,Inverter 5, None
